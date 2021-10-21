@@ -12,7 +12,9 @@ app.get('/', (req, res) => {
     request(url, (error, response, html) => {
         if (!error) {
             var $ = cheerio.load(html);
-            var menu = $(`[data-date=${date}] div[class=txt-hold]`).text();
+            var menu = $(`tr[data-date=${date}] > td`).text();
+            menu = menu.replace(/\n/g,' ');
+            menu = menu.replace(/\s\s+/g, ' ');
             res.status(200).send({
                 date,
                 menu
