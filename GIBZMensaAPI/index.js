@@ -1,17 +1,16 @@
 const http = require('http');
 const express = require('express');
-const app = require('./app');
 const router = express.Router();
 
+const menuTypes = [
+    "Tagesmenü",
+    "Vegimenü",
+    "Hit",
+    "Topping des Tages"
+]
 
 
-app.listen('8080');
-app.use('/', router);
-console.log('API is running at http://localhost:8080/api/v1/');
-
-
-
-const splitToMenus = (...menuStrings) => {
+function splitToMenus(...menuStrings) {
     for (const menuType of menuTypes) {
         menuStrings = menuStrings.map(menu => menu.split(menuType)).flat()
     }
@@ -27,7 +26,7 @@ const splitToMenus = (...menuStrings) => {
     return menus
 }
 
-module.exports = splitToMenus;
+module.exports = { splitToMenus };
 
 router.use((req, res, next) => {
     res.header('Access-Control-Allow-Methods', 'GET');
@@ -43,3 +42,9 @@ router.get('/', (req, res) => {
 
     res.status(200).send(data);
 });
+
+
+const app = require('./app');
+app.listen('8080');
+app.use('/', router);
+console.log('API is running at http://localhost:8080/api/v1/');
