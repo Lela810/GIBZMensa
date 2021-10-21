@@ -10,6 +10,6 @@ services:
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "node", "node ./services/healthcheck.js"]
-      interval: 1m30s
+      interval: 1m
       timeout: 10s
       retries: 0

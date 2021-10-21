@@ -5,7 +5,7 @@ const { writeFileSync, statSync, readFileSync } = require('fs');
 const moment = require('moment');
 const { join } = require('path');
 const app = express();
-const index = require('./index.js');
+const splitToMenus = require('./splitToMenus.js');
 
 
 const archivePath = join(__dirname, '/archive')
@@ -18,7 +18,7 @@ app.get('/api/v1/', (req, res) => {
 
     // Decide if menu is already in the archive
     const dayOfTheWeek = moment(date).format('d')
-    if (!["6", "0"].includes(dayOfTheWeek)) {
+    if (!["6", "0"].includes(dayOfTheWeek) && moment(date).isValid()) {
         try {
             statSync(filePath)
             const cachedMenu = JSON.parse(readFileSync(filePath, 'utf-8'))
@@ -38,7 +38,7 @@ app.get('/api/v1/', (req, res) => {
 
 
 
-                    const menu = index.splitToMenus(menuData)
+                    const menu = splitToMenus.split(menuData)
 
 
                     const response = {
@@ -55,7 +55,7 @@ app.get('/api/v1/', (req, res) => {
             });
         }
     } else {
-        res.status(400).send({ error: "Day of the week must not be on the weekend" })
+        res.status(400).send({ error: "The date requested is not valid or on weekends" })
     }
 });
 
