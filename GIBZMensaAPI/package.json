@@ -4,7 +4,7 @@
     "description": "Creates an API for the GIBZ Mensa App",
     "main": "index.js",
     "scripts": {
-        "health-check": "node healthcheck.js",
+        "health-check": "node ./services/healthcheck.js",
         "dev": "nodemon index.js"
     },
     "keywords": [
