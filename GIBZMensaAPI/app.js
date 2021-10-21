@@ -1,19 +1,12 @@
 const express = require('express');
 const request = require('request');
 const cheerio = require('cheerio');
-const { writeFileSync, statSync, readFileSync } = require('fs')
-const moment = require('moment')
-const { join } = require('path')
+const { writeFileSync, statSync, readFileSync } = require('fs');
+const moment = require('moment');
+const { join } = require('path');
 const app = express();
-const splitToMenus = require('./index.js')
+const index = require('./index.js');
 
-
-const menuTypes = [
-    "Tagesmenü",
-    "Vegimenü",
-    "Hit",
-    "Topping des Tages"
-]
 
 const archivePath = join(__dirname, '/archive')
 
@@ -45,7 +38,7 @@ app.get('/api/v1/', (req, res) => {
 
 
 
-                    const menu = splitToMenus(menuData)
+                    const menu = index.splitToMenus(menuData)
 
 
                     const response = {
