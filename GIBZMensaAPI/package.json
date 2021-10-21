@@ -6,7 +6,7 @@
     "scripts": {
         "health-check": "node ./services/healthcheck.js",
         "dev": "nodemon index.js",
-        "update": "docker-compose down & docker image rm gibzmensaapi_web:latest & git pull & docker-compose up -d"
+        "update": "docker-compose down --rmi 'all' && docker image rm gibzmensaapi_web:latest && git pull && docker-compose up -d"
     },
     "keywords": [
         "API",
