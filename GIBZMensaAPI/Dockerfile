@@ -1,6 +1,7 @@
 FROM node:12.18.1
 
-ENV NODE_ENV=production
+ENV NODE_ENV=production \
+    IS_DOCKER=true
 
 WORKDIR /app
 
