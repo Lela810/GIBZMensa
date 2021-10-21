@@ -4,6 +4,7 @@ const cheerio = require('cheerio');
 const { writeFileSync, statSync, readFileSync } = require('fs')
 const { join } = require('path')
 const moment = require('moment')
+const http = require('http');
 
 const app = express();
 
@@ -31,7 +32,7 @@ const splitToMenus = (...menuStrings) => {
     return menus
 }
 
-app.get('/', (req, res) => {
+app.get('/api/v1/', (req, res) => {
     const date = req.query.date;
     const filePath = `${join(archivePath, date)}.json`
     const url = 'https://zfv.ch/de/microsites/restaurant-treff/menuplan#' + date; //Date must be in format -> 2021-10-22
@@ -80,3 +81,25 @@ app.get('/', (req, res) => {
 app.listen('8080');
 console.log('API is running on http://localhost:8080');
 module.exports = app;
+
+
+
+
+const router = express.Router();
+
+router.use((req, res, next) => {
+    res.header('Access-Control-Allow-Methods', 'GET');
+    next();
+});
+
+router.get('/', (req, res) => {
+    const data = {
+        uptime: process.uptime(),
+        message: 'Ok',
+        date: new Date()
+    }
+
+    res.status(200).send(data);
+});
+
+app.use('/', router);
