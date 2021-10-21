@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
     request(url, (error, response, html) => {
         if (!error) {
             var $ = cheerio.load(html);
-            var menu = $(`[data-date="${date}"] > div > txt-hold`).text();
+            var menu = $(`[data-date=${date}] div[class=txt-hold]`).text();
             res.status(200).send({
                 date,
                 menu
