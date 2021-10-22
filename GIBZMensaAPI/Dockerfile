@@ -7,7 +7,7 @@ WORKDIR /app
 
 RUN mkdir archive
 
-COPY ["package.json", "package-lock.json*", "./"]
+COPY ["./services", "package.json", "package-lock.json*", "./"]
 
 RUN npm install --production
 
