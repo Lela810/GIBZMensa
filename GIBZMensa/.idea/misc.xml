@@ -3,12 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Leandro Klaus/Dokumente/GitHub/GIBZMensa/GIBZMensa/app/src/main/res/layout/settings_activity.xml" value="0.20572916666666666" />
-        <entry key="..\:/Users/Leandro Klaus/Dokumente/GitHub/GIBZMensa/GIBZMensa/app/src/main/res/xml/root_preferences.xml" value="0.33" />
-        <entry key="..\:/Users/leandro.klaus/AndroidStudioProjects/GIBZMensa/app/src/main/res/drawable/ic_launcher_background.xml" value="0.3828125" />
-        <entry key="..\:/Users/leandro.klaus/AndroidStudioProjects/GIBZMensa/app/src/main/res/layout/settings_activity.xml" value="0.1661600810536981" />
-        <entry key="..\:/Users/leandro.klaus/AndroidStudioProjects/GIBZMensa/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.3828125" />
-        <entry key="..\:/Users/leandro.klaus/AndroidStudioProjects/GIBZMensa/app/src/main/res/xml/root_preferences.xml" value="0.33" />
+        <entry key="..\:/Users/Leandro Klaus/Dokumente/GitHub/GIBZMensa/GIBZMensa/app/src/main/res/layout/activity_main.xml" value="0.20520833333333333" />
       </map>
     </option>
   </component>
