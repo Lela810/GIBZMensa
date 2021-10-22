@@ -1,28 +1,34 @@
 const express = require('express');
 const request = require('request');
 const cheerio = require('cheerio');
-const { writeFileSync, statSync, readFileSync } = require('fs');
+const { writeFileSync, statSync, readFileSync, accessSync, mkdirSync } = require('fs');
 const moment = require('moment');
 const { join } = require('path');
 const app = express();
 const splitToMenus = require('./splitToMenus.js');
+const { now } = require('moment');
 
 
-const archivePath = join(__dirname, '/archive')
+
+const archivePath = join(__dirname, '../archive')
 
 app.get('/api/v1/', (req, res) => {
     const date = req.query.date;
-    const filePath = `${join(archivePath, date)}.json`
-    const url = 'https://zfv.ch/de/microsites/restaurant-treff/menuplan#' + date; //Date must be in format -> 2021-10-22
+    const filePath = `${join(archivePath,moment(date).format('YYYY-MM'), moment(date).format('YYYY-MM-DD'))}.json`
+    const url = 'https://zfv.ch/de/microsites/restaurant-treff/menuplan#' + moment(date).format('YYYY-MM-DD'); //Date must be in format -> 2021-10-22
     console.log('Date "' + date + '" requested')
 
     // Decide if menu is already in the archive
     const dayOfTheWeek = moment(date).format('d')
-    if (!["6", "0"].includes(dayOfTheWeek) && moment(date).isValid()) {
+    if (!["6", "0"].includes(dayOfTheWeek) && moment(date).isValid() && (Math.abs((moment().week()) - (moment(date).week())) <= 1)) {
         try {
             statSync(filePath)
             const cachedMenu = JSON.parse(readFileSync(filePath, 'utf-8'))
-            res.status(200).send(cachedMenu)
+            if (Object.keys(cachedMenu.menu).length === 0) {
+                res.status(500).send({ error: "There is no data about that menu" });
+            } else {
+                res.status(200).send(cachedMenu);
+            }
         } catch (err) {
             request(url, (error, response, html) => {
                 if (!error) {
@@ -37,18 +43,28 @@ app.get('/api/v1/', (req, res) => {
                         .trim()
 
 
-
                     const menu = splitToMenus.split(menuData)
-
 
                     const response = {
                         date,
                         menu
                     }
-                    res.status(200).send(response);
+
+                    if (!menuData) {
+                        res.status(500).send({ error: "There is no data about that menu" });
+                    } else {
+                        res.status(200).send(response);
+                    }
+
 
                     // Save to archive
+                    try {
+                        accessSync(join(archivePath, moment(date).format('YYYY-MM')))
+                    } catch {
+                        mkdirSync(join(archivePath, moment(date).format('YYYY-MM')))
+                    }
                     writeFileSync(filePath, JSON.stringify(response, null, 2))
+
                 } else {
                     res.status(500).send({ error: error.message })
                 }
