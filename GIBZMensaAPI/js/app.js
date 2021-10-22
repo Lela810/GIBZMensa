@@ -20,7 +20,7 @@ app.get('/api/v1/', (req, res) => {
 
     // Decide if menu is already in the archive
     const dayOfTheWeek = moment(date).format('d')
-    if (!["6", "0"].includes(dayOfTheWeek) && moment(date).isValid() && (Math.abs((moment().week()) - (moment(date).week())) <= 1)) {
+    if (!["6", "0"].includes(dayOfTheWeek) && moment(date).isValid() && (moment(date).week() - (moment().week())) < 2) {
         try {
             statSync(filePath)
             const cachedMenu = JSON.parse(readFileSync(filePath, 'utf-8'))
