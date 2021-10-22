@@ -9,7 +9,7 @@ services:
       - "8080:8080"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "node", "node /app/services/healthcheck.js"]
+      test: ["CMD", "node", "/app/services/healthcheck.js"]
       interval: 1m
       timeout: 10s
       retries: 0
