@@ -1,2 +1,4 @@
 /node_modules
 /archive
+/.vscode
+apiTest.http
