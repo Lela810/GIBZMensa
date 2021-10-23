@@ -12,6 +12,7 @@ const { now } = require('moment');
 
 const archivePath = join(__dirname, '../archive')
 
+
 app.get('/api/v1/', (req, res) => {
     const date = req.query.date;
     const filePath = `${join(archivePath,moment(date).format('YYYY-MM'), moment(date).format('YYYY-MM-DD'))}.json`

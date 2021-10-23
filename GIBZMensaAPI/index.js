@@ -1,6 +1,12 @@
 const http = require('http');
 const express = require('express');
 const router = express.Router();
+const cors = require('cors');
+
+
+app.use(cors({
+    origin: '*'
+}));
 
 router.use((req, res, next) => {
     res.header('Access-Control-Allow-Methods', 'GET');
