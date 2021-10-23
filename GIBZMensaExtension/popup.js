@@ -1,14 +1,70 @@
-document.addEventListener('DOMContentLoaded', function() {
-    chrome.storage.local.get(['date', 'menu'], function(storage) {
-        const currentDate = (new Date());
-        document.getElementById('date').innerHTML = ('<strong>' + currentDate.getDate() + '.' + currentDate.getMonth() + '.' + currentDate.getFullYear() + '</strong>')
-        document.getElementById('Tagesmenü').innerHTML = ('<strong>Tagesmenü:</strong> ' + storage.menu.Tagesmenü)
-        document.getElementById('Vegimenü').innerHTML = ('<strong>Vegimenü:</strong> ' + storage.menu.Vegimenü)
-        document.getElementById('Hit').innerHTML = ('<strong>Hit:</strong> ' + storage.menu.Hit)
+function resetMenu(apiDate) {
+    chrome.storage.local.get([apiDate], function(storage) {
+        document.getElementById('menu').innerHTML = (`
+            <p id="error"></p>
+            <p id="Tagesmenü"></p>
+            &nbsp;
+            <p id="Vegimenü"></p>
+            &nbsp;
+            <p id="Hit"></p>
+             &nbsp;
+            <p id="Topping des Tages"></p>
+            `);
     })
+}
+
+function setMenu(arrayPosition) {
+    chrome.storage.local.get(['apiDates', 'month'], function(storage) {
+        const apiDate = storage.apiDates[arrayPosition]
+        const month = storage.month
+        const currentDate = (new Date())
+
+        resetMenu(apiDate);
+
+        chrome.storage.local.get([apiDate], function(storage) {
+            document.getElementById('date').innerHTML = ('<strong>' + (currentDate.getDate() + arrayPosition) + '.' + month + '.' + currentDate.getFullYear() + '</strong>')
+            if (storage[apiDate].hasOwnProperty('error')) {
+                document.getElementById('error').innerHTML = (`<strong>Error:</strong> ` + storage[apiDate].error)
+            } else {
+                for (const menu in storage[apiDate].menu) {
+                    document.getElementById(menu).innerHTML = (`<strong>${menu}:</strong> ` + storage[apiDate].menu[menu])
+                }
+            }
+
+        })
+    })
+}
+
+
+function navbarSetActive(navbarElementNumber) {
+    const navbarElements = [
+        "heute",
+        "morgen",
+        "übermorgen"
+    ]
+    navbarElements.forEach(function(navbarElement) {
+        document.getElementById(navbarElement).className = "";
+    })
+    document.getElementById(navbarElements[navbarElementNumber]).className = "is-active";
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    navbarSetActive(0)
+    setMenu(0);
 });
 
-document.getElementById('gestern').onclick = function(event) {
+document.getElementById('heute').onclick = function(event) {
     if (event === undefined) event = window.event;
-    alert("test")
+    navbarSetActive(0)
+    setMenu(0);
+}
+document.getElementById('morgen').onclick = function(event) {
+    if (event === undefined) event = window.event;
+    navbarSetActive(1)
+    setMenu(1);
+}
+document.getElementById('übermorgen').onclick = function(event) {
+    if (event === undefined) event = window.event;
+    navbarSetActive(2)
+    setMenu(2);
 }

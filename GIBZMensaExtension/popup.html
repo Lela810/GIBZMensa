@@ -6,26 +6,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GIBZ Mensa Menu</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <style>
+         ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+        
+        .hero-body {
+            max-height: 500px !important;
+            overflow: scroll;
+        }
+    </style>
 
 </head>
 
 <body>
     <section>
-        <div class="tabs is-centered mb-0">
+        <div id="tabs" class="tabs is-centered mb-0">
             <ul>
-                <li id="gestern"><a>Gestern</a></li>
-                <li id="heute" class="is-active"><a>Heute</a></li>
+                <li id="heute"><a>Heute</a></li>
                 <li id="morgen"><a>Morgen</a></li>
+                <li id="übermorgen"><a>Übermorgen</a></li>
             </ul>
         </div>
         <div class="hero-body hero is-info">
             <p class="title" id="date"></p>
-            <div class="is-4">
+            <div id="menu" class="is-4">
+                <p id="error"></p>
                 <p id="Tagesmenü"></p>
                 &nbsp;
                 <p id="Vegimenü"></p>
                 &nbsp;
                 <p id="Hit"></p>
+                &nbsp;
+                <p id="Topping des Tages"></p>
             </div>
         </div>
     </section>
