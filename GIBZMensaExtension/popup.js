@@ -1,65 +1,14 @@
-function setupCounter(initialValue = 0) {
+document.addEventListener('DOMContentLoaded', function() {
+    chrome.storage.local.get(['date', 'menu'], function(storage) {
+        const currentDate = (new Date());
+        document.getElementById('date').innerHTML = ('<strong>' + currentDate.getDate() + '.' + currentDate.getMonth() + '.' + currentDate.getFullYear() + '</strong>')
+        document.getElementById('Tagesmenü').innerHTML = ('<strong>Tagesmenü:</strong> ' + storage.menu.Tagesmenü)
+        document.getElementById('Vegimenü').innerHTML = ('<strong>Vegimenü:</strong> ' + storage.menu.Vegimenü)
+        document.getElementById('Hit').innerHTML = ('<strong>Hit:</strong> ' + storage.menu.Hit)
+    })
+});
 
-
-    chrome.storage.local.set({ newCount: 10 })
-    document.getElementById('counter').innerHTML = counterStorage.get('newCount');
-
-    // document.getElementById('incrementBtn').addEventListener('click', () => {
-    //    updateCounter({
-    //        type: 'INCREMENT',
-    //   });
-    //}); 
+document.getElementById('gestern').onclick = function(event) {
+    if (event === undefined) event = window.event;
+    alert("test")
 }
-
-
-function updateCounter({ type }) {
-    counterStorage.get(count => {
-        let newCount;
-
-        if (type === 'INCREMENT') {
-            newCount = count + 1;
-        } else if (type === 'DECREMENT') {
-            newCount = count - 1;
-        } else {
-            newCount = count;
-        }
-
-        counterStorage.set(newCount, () => {
-            document.getElementById('counter').innerHTML = newCount;
-
-            // Communicate with content script of
-            // active tab by sending a message
-            chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-                const tab = tabs[0];
-
-                chrome.tabs.sendMessage(
-                    tab.id, {
-                        type: 'COUNT',
-                        payload: {
-                            count: newCount,
-                        },
-                    },
-                    response => {
-                        console.log('Current count value passed to contentScript file');
-                    }
-                );
-            });
-        });
-    });
-}
-
-function restoreCounter() {
-    // Restore count value
-    counterStorage.get(count => {
-        if (typeof count === 'undefined') {
-            // Set counter value as 0
-            counterStorage.set(0, () => {
-                setupCounter(0);
-            });
-        } else {
-            setupCounter(count);
-        }
-    });
-}
-
-document.addEventListener('DOMContentLoaded', setupPage);
