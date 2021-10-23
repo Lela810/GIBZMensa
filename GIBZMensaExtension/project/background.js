@@ -1,5 +1,4 @@
-chrome.runtime.onInstalled.addListener(async() => {
-
+async function requestMenu() {
     const currentDate = (new Date());
 
     const today = currentDate.getDate();
@@ -46,6 +45,12 @@ chrome.runtime.onInstalled.addListener(async() => {
             console.error(err);
         }
     });
+}
 
+chrome.runtime.onInstalled.addListener(function() {
+    requestMenu()
+});
 
+chrome.runtime.onStartup.addListener(function() {
+    requestMenu()
 });
