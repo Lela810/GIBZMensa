@@ -7,11 +7,16 @@ const { join } = require('path');
 const app = express();
 const splitToMenus = require('./splitToMenus.js');
 const { now } = require('moment');
+const cors = require('cors');
 
 
 
 const archivePath = join(__dirname, '../archive')
 
+
+app.use(cors({
+    origin: '*'
+}));
 
 app.get('/api/v1/', (req, res) => {
     const date = req.query.date;
