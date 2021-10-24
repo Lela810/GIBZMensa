@@ -4,7 +4,7 @@ const router = express.Router();
 const mongoose = require("mongoose")
 
 
-mongoose.connect('mongodb://127.0.0.1/archive', { useNewUrlParser: true })
+mongoose.connect('mongodb://192.168.3.115/archive', { useNewUrlParser: true })
 const db = mongoose.connection
 db.on('error', (error) => console.error(error))
 db.once('open', () => console.log('Connected to Database'))
