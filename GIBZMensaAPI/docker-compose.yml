@@ -15,8 +15,6 @@ services:
       retries: 0
     depends_on:
       - mongodb
-    networks:
-      - mongo_net
   mongodb:
     image: mongo:4.4.10
     container_name: mongodb
@@ -27,8 +25,3 @@ services:
     ports:
       - 27017:27017
     restart: unless-stopped
-    networks:
-      - mongo_net
-networks:
-  mongo_net:
-    driver: bridge
