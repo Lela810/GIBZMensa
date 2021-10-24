@@ -1,19 +1,20 @@
 const express = require('express');
 const request = require('request');
 const cheerio = require('cheerio');
-const { writeFileSync, statSync, readFileSync, accessSync, mkdirSync } = require('fs');
 const moment = require('moment');
-const { join } = require('path');
+const rateLimit = require('express-rate-limit')
 const app = express();
 const splitToMenus = require('./splitToMenus.js');
-const { now } = require('moment');
 const cors = require('cors');
 const archive = require('../models/archive.js');
 
 
+const limiter = rateLimit({
+    windowMs: 1 * 60 * 1000,
+    max: 10,
+})
 
 
-const archivePath = join(__dirname, '../archive')
 
 
 async function saveToArchive(json) {
@@ -39,21 +40,11 @@ async function loadFromArchive(date) {
 }
 
 
-app.get('/api/v1/archive', async(req, res) => {
-    try {
-        const archiveEntries = await archive.find()
-        res.status(200).json(archiveEntries)
-    } catch {
-        res.status(500).json({ message: err.message })
-    }
-});
-
-
 app.use(cors({
     origin: '*'
 }));
 
-app.get('/api/v1/', async(req, res) => {
+app.get('/api/v1/', limiter, async(req, res) => {
     const date = req.query.date;
     const url = 'https://zfv.ch/de/microsites/restaurant-treff/menuplan#' + moment(date).format('YYYY-MM-DD'); //Date must be in format -> 2021-10-22
     console.log('Date "' + date + '" requested')

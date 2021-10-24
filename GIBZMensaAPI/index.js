@@ -3,7 +3,13 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require("mongoose")
 const dotenv = require('dotenv');
+const rateLimit = require('express-rate-limit')
+const app = require('./js/app');
 
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+})
 
 dotenv.config();
 
@@ -29,7 +35,6 @@ router.get('/', (req, res) => {
 });
 
 
-const app = require('./js/app');
 app.listen('8080');
-app.use('/', router);
+app.use('/', limiter, router);
 console.log('API is running at http://localhost:8080/api/v1/');
