@@ -2,9 +2,13 @@ const http = require('http');
 const express = require('express');
 const router = express.Router();
 const mongoose = require("mongoose")
+const dotenv = require('dotenv');
 
 
-mongoose.connect('mongodb://192.168.3.115/archive', { useNewUrlParser: true })
+dotenv.config();
+
+
+mongoose.connect(`mongodb://${process.env.MONGODB}/archive`, { useNewUrlParser: true })
 const db = mongoose.connection
 db.on('error', (error) => console.error(error))
 db.once('open', () => console.log('Connected to Database'))
