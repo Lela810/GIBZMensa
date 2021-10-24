@@ -4,10 +4,11 @@ const archiveSchema = new mongoose.Schema({
     date: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        index: true
     },
     menu: {
-        type: Array,
+        type: Object,
         required: false
     },
     error: {
