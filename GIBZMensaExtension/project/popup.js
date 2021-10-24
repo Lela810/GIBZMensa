@@ -1,6 +1,5 @@
-function resetMenu(apiDate) {
-    chrome.storage.local.get([apiDate], function(storage) {
-        document.getElementById('menu').innerHTML = (`
+function resetMenu() {
+    document.getElementById('menu').innerHTML = (`
             <p id="error"></p>
             <p id="Tagesmenü"></p>
             &nbsp;
@@ -10,7 +9,6 @@ function resetMenu(apiDate) {
              &nbsp;
             <p id="Topping des Tages"></p>
             `);
-    })
 }
 
 function setMenu(arrayPosition) {
@@ -19,7 +17,7 @@ function setMenu(arrayPosition) {
         const month = dates.month
         const currentDate = (new Date())
 
-        resetMenu(apiDate);
+        resetMenu();
 
         chrome.storage.local.get([apiDate], function(storage) {
             document.getElementById('date').innerHTML = ('<strong>' + (currentDate.getDate() + arrayPosition) + '.' + month + '.' + currentDate.getFullYear() + '</strong>')
