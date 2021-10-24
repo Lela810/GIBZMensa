@@ -8,19 +8,53 @@ const app = express();
 const splitToMenus = require('./splitToMenus.js');
 const { now } = require('moment');
 const cors = require('cors');
+const archive = require('../models/archive.js');
+
 
 
 
 const archivePath = join(__dirname, '../archive')
 
 
+async function saveToArchive(json) {
+    const archiveEntry = new archive(json)
+    try {
+        const newArchive = await archiveEntry.save()
+        return;
+    } catch (err) {
+        console.error(err);
+        return err;
+    }
+}
+
+async function loadFromArchive(date) {
+    let archiveEntry
+    try {
+        archiveEntry = await archive.find({ 'date': date }, { _id: 0, __v: 0 })
+        return (archiveEntry[0])
+    } catch (err) {
+        console.error(err);
+        return err;
+    }
+}
+
+
+app.get('/api/v1/archive', async(req, res) => {
+    try {
+        const archiveEntries = await archive.find()
+        res.status(200).json(archiveEntries)
+    } catch {
+        res.status(500).json({ message: err.message })
+    }
+});
+
+
 app.use(cors({
     origin: '*'
 }));
 
-app.get('/api/v1/', (req, res) => {
+app.get('/api/v1/', async(req, res) => {
     const date = req.query.date;
-    const filePath = `${join(archivePath,moment(date).format('YYYY-MM'), moment(date).format('YYYY-MM-DD'))}.json`
     const url = 'https://zfv.ch/de/microsites/restaurant-treff/menuplan#' + moment(date).format('YYYY-MM-DD'); //Date must be in format -> 2021-10-22
     console.log('Date "' + date + '" requested')
 
@@ -28,8 +62,7 @@ app.get('/api/v1/', (req, res) => {
     const dayOfTheWeek = moment(date).format('d')
     if (!["6", "0"].includes(dayOfTheWeek) && moment(date).isValid() && (moment(date).week() - (moment().week())) < 2) {
         try {
-            statSync(filePath)
-            const cachedMenu = JSON.parse(readFileSync(filePath, 'utf-8'))
+            const cachedMenu = await loadFromArchive(date)
             if (Object.keys(cachedMenu.menu).length === 0) {
                 res.status(500).send({ error: "There is no data about that menu" });
             } else {
@@ -64,12 +97,7 @@ app.get('/api/v1/', (req, res) => {
 
 
                     // Save to archive
-                    try {
-                        accessSync(join(archivePath, moment(date).format('YYYY-MM')))
-                    } catch {
-                        mkdirSync(join(archivePath, moment(date).format('YYYY-MM')))
-                    }
-                    writeFileSync(filePath, JSON.stringify(response, null, 2))
+                    saveToArchive(response)
 
                 } else {
                     res.status(500).send({ error: error.message })
