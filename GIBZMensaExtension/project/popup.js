@@ -14,9 +14,9 @@ function resetMenu(apiDate) {
 }
 
 function setMenu(arrayPosition) {
-    chrome.storage.local.get(['apiDates', 'month'], function(storage) {
-        const apiDate = storage.apiDates[arrayPosition]
-        const month = storage.month
+    chrome.storage.local.get(['apiDates', 'month'], function(dates) {
+        const apiDate = dates.apiDates[arrayPosition]
+        const month = dates.month
         const currentDate = (new Date())
 
         resetMenu(apiDate);
