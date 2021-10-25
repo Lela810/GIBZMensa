@@ -14,5 +14,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Go to API Directory
+      run: cd ./GIBZMensaAPI
     - name: Build the Docker image
-      run: docker build . --file ./GIBZMensaAPI/Dockerfile --tag gibzmensaapi:$(date +%s)
+      run: docker build . --file Dockerfile --tag gibzmensaapi:$(date +%s)
