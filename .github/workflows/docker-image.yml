@@ -12,4 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build the Docker image
-        run: cd ./GIBZMensaAPI && health -timeout 30s -fail-on-unhealthy $(docker build . --file Dockerfile --tag gibzmensaapi:$(date +%s))
+        run: cd ./GIBZMensaAPI && docker build . --file Dockerfile --tag gibzmensaapi:$(date +%s) 
+      - uses: arnested/healthy@v0.3.1
+      - name: Wait for Containers to become healty
+        run: healthy -timeout 30s -fail-on-unhealthy $(docker-compose ps -q)
