@@ -38,7 +38,7 @@ async function loadFromArchive(dateNorm) {
         return err;
     }
 }
-
+//TODO test
 
 app.use(cors({
     origin: '*'
