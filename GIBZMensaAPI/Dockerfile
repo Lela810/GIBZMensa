@@ -17,4 +17,4 @@ CMD [ "node", "index.js" ]
 
 EXPOSE 8080
 
-HEALTHCHECK --interval=5m --timeout=2s --start-period=30s CMD node /app/services/healthcheck.js
+HEALTHCHECK --interval=5m --timeout=2s --start-period=10s CMD node /app/services/healthcheck.js
