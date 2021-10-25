@@ -1,4 +1,3 @@
-const http = require('http');
 const express = require('express');
 const router = express.Router();
 const mongoose = require("mongoose")
@@ -39,3 +38,11 @@ router.get('/', (req, res) => {
 app.listen('8080');
 app.use('/', limiter, router);
 console.log('API is running at http://localhost:8080/api/v1/');
+
+
+
+
+
+
+
+//TODO Create GIBZMensaAPI Docs
