@@ -120,7 +120,9 @@ function timeToGo(s) {
 
 document.addEventListener('DOMContentLoaded', async function() {
     navbarSetActive(0)
-    const alertDetails = (await setMenu(0)); //TODO Create notification implementation
+    const alertDetails = (await setMenu(0));
+    //TODO Create notification implementation
+
     //const dateTo = (`${alertDetails.apiDate}T01:50:00Z`)
     //const timeTo = (await timeToGo(dateTo))
     //console.log(timeTo)
