@@ -25,6 +25,8 @@ function requestDates() {
         month = ('0' + month)
     }
 
+    const year = currentDate.getFullYear()
+
     const days = [
         today,
         tomorrow,
@@ -38,7 +40,7 @@ function requestDates() {
     ];
 
 
-    return ({ apiDates, month, days })
+    return ({ apiDates, year, month, days })
 }
 
 function resetMenu() {
@@ -56,17 +58,15 @@ function resetMenu() {
 
 async function setMenu(arrayPosition) {
 
-    const dates = requestDates()
-    const apiDate = dates.apiDates[arrayPosition]
-    const month = dates.month
-    const day = dates.days[arrayPosition]
-    const currentDate = (new Date())
+    const { apiDates, year, month, days } = requestDates()
+    const apiDate = apiDates[arrayPosition]
+    const day = days[arrayPosition]
     const request = (await api(apiDate))
     resetMenu();
 
     let alertData = {};
 
-    document.getElementById('date').innerHTML = ('<strong>' + day + '.' + month + '.' + currentDate.getFullYear() + '</strong>')
+    document.getElementById('date').innerHTML = ('<strong>' + day + '.' + month + '.' + year + '</strong>')
     if (request.hasOwnProperty('error')) {
         document.getElementById('error').innerHTML = (`<strong>Error:</strong> ` + request.error)
     } else {
@@ -120,7 +120,7 @@ function timeToGo(s) {
 
 document.addEventListener('DOMContentLoaded', async function() {
     navbarSetActive(0)
-    const alertDetails = (await setMenu(0));
+    const alertDetails = (await setMenu(0)); //TODO Create notification implementation
     //const dateTo = (`${alertDetails.apiDate}T01:50:00Z`)
     //const timeTo = (await timeToGo(dateTo))
     //console.log(timeTo)
@@ -132,17 +132,14 @@ document.addEventListener('DOMContentLoaded', async function() {
 });
 
 document.getElementById('heute').onclick = function(event) {
-    if (event === undefined) event = window.event;
     navbarSetActive(0)
     setMenu(0);
 }
 document.getElementById('morgen').onclick = function(event) {
-    if (event === undefined) event = window.event;
     navbarSetActive(1)
     setMenu(1);
 }
 document.getElementById('übermorgen').onclick = function(event) {
-    if (event === undefined) event = window.event;
     navbarSetActive(2)
     setMenu(2);
 }
