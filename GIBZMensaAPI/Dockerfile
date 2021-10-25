@@ -5,7 +5,7 @@ ENV NODE_ENV=production \
 
 WORKDIR /app
 
-RUN mkdir archive
+RUN mkdir db
 
 COPY ["package.json", "package-lock.json*", "./"]
 
