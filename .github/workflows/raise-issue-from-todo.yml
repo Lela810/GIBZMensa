@@ -1,5 +1,5 @@
 # Finds any TO-DO notes within the code, and opens up an issue for it to be fixed
-name: 🌈 Open issue for Todos
+name: Open issue for TODO
 on: ['push']
 jobs:
   build:
