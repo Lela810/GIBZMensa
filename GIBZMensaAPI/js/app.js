@@ -28,10 +28,10 @@ async function saveToArchive(json) {
     }
 }
 
-async function loadFromArchive(date) {
+async function loadFromArchive(dateNorm) {
     let archiveEntry
     try {
-        archiveEntry = await archive.find({ 'date': date }, { _id: 0, __v: 0 })
+        archiveEntry = await archive.find({ 'date': dateNorm }, { _id: 0, __v: 0 })
         return (archiveEntry[0])
     } catch (err) {
         console.error(err);
@@ -46,26 +46,33 @@ app.use(cors({
 
 app.get('/api/v1/', limiter, async(req, res) => {
     const date = req.query.date;
-    const url = 'https://zfv.ch/de/microsites/restaurant-treff/menuplan#' + moment(date).format('YYYY-MM-DD'); //Date must be in format -> 2021-10-22 
-    console.log('Date "' + date + '" requested')
+    let dateNorm;
+    if (moment(date).isValid()) {
+        dateNorm = moment(date).format('YYYY-MM-DD')
+    } else {
+        res.status(400).send({ error: "The date requested is not valid" })
+    }
+
+    const url = 'https://zfv.ch/de/microsites/restaurant-treff/menuplan#' + dateNorm; //Date must be in format -> 2021-10-22 
+    console.log('Date "' + dateNorm + '" requested')
 
     // Decide if menu is already in the archive
-    const dayOfTheWeek = moment(date).format('d')
-    if (!["6", "0"].includes(dayOfTheWeek) && moment(date).isValid() && (moment(date).week() - (moment().week())) < 2) {
+    const dayOfTheWeek = moment(dateNorm).format('d')
+    if (!["6", "0"].includes(dayOfTheWeek) && (moment(dateNorm).week() - (moment().week())) < 2) {
         try {
-            const cachedMenu = await loadFromArchive(date)
-            if (Object.keys(cachedMenu.menu).length === 0) {
-                res.status(500).send({ error: "There is no data about that menu" });
-            } else {
+            const cachedMenu = await loadFromArchive(dateNorm)
+            if (cachedMenu.hasOwnProperty('menu')) {
                 res.status(200).send(cachedMenu);
+            } else {
+                res.status(500).send({ error: "There is no data about that menu" });
             }
         } catch (err) {
             request(url, (error, response, html) => {
                 if (!error) {
                     console.log('URL "' + url + '" requested')
                     const $ = cheerio.load(html);
-                    $(`tr[data-date=${date}] > td div[class=txt-slide]`).remove();
-                    const menuData = $(`tr[data-date=${date}] > td`)
+                    $(`tr[data-date=${dateNorm}] > td div[class=txt-slide]`).remove();
+                    const menuData = $(`tr[data-date=${dateNorm}] > td`)
                         .text()
                         .replace(/\n/g, ' ')
                         .replace(/\s\s+/g, ' ')
@@ -76,9 +83,10 @@ app.get('/api/v1/', limiter, async(req, res) => {
                     const menu = splitToMenus.split(menuData)
 
                     const response = {
-                        date,
+                        ['date']: dateNorm,
                         menu
                     }
+
 
                     if (!menuData) {
                         res.status(500).send({ error: "There is no data about that menu" });
