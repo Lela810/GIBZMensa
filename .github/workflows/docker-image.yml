@@ -15,4 +15,4 @@ jobs:
         run: cd ./GIBZMensaAPI && docker build . --file Dockerfile --tag gibzmensaapi:$(date +%s) 
       - uses: arnested/healthy@v0.3.1
       - name: Wait for Containers to become healty
-        run: healthy -timeout 30s -fail-on-unhealthy $(docker-compose ps -q)
+        run: healthy -timeout 30s -fail-on-unhealthy $(docker ps -q)
