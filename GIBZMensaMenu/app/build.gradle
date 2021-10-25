@@ -9,8 +9,8 @@ android {
         applicationId "com.lela810.gibzmensa"
         minSdk 22
         targetSdk 31
-        versionCode 3
-        versionName "1.1dev"
+        versionCode 4
+        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
