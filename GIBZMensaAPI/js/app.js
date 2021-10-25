@@ -46,7 +46,7 @@ app.use(cors({
 
 app.get('/api/v1/', limiter, async(req, res) => {
     const date = req.query.date;
-    const url = 'https://zfv.ch/de/microsites/restaurant-treff/menuplan#' + moment(date).format('YYYY-MM-DD'); //Date must be in format -> 2021-10-22
+    const url = 'https://zfv.ch/de/microsites/restaurant-treff/menuplan#' + moment(date).format('YYYY-MM-DD'); //Date must be in format -> 2021-10-22 
     console.log('Date "' + date + '" requested')
 
     // Decide if menu is already in the archive
