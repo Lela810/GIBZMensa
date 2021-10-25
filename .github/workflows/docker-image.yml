@@ -19,5 +19,6 @@ jobs:
         with:
           time: '10s'
           
+      - uses: actions/checkout@v2    
       - name: show running container
         run: docker ps 
