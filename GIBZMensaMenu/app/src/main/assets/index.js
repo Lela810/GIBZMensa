@@ -1,4 +1,13 @@
-async function requestMenu() {
+async function api(apiDate) {
+    const url = ('https://gibzmensa.lklaus.ch/api/v1/?date=' + apiDate)
+    console.log('url ' + url + ' requested')
+    const api = await fetch(url)
+    const menu = await api.json();
+    return menu
+}
+
+
+function requestDates() {
     const currentDate = (new Date());
 
     const today = currentDate.getDate();
@@ -16,6 +25,12 @@ async function requestMenu() {
         month = ('0' + month)
     }
 
+    const days = [
+        today,
+        tomorrow,
+        theDayAfterTomorrow
+    ]
+
     const apiDates = [
         (currentDate.getFullYear() + '-' + month + '-' + today),
         (currentDate.getFullYear() + '-' + month + '-' + tomorrow),
@@ -23,28 +38,10 @@ async function requestMenu() {
     ];
 
 
-
-    apiDates.forEach(async(apiDate) => {
-        const url = ('https://gibzmensa.lklaus.ch/api/v1/?date=' + apiDate)
-        let menu;
-
-        try {
-            console.log('url ' + url + ' requested')
-            const api = await fetch(url);
-            const menuSingle = await api.json();
-            menu += {
-                [apiDate]: menuSingle
-            };
-
-        } catch (err) {
-            console.error(err);
-        }
-    });
-
-    return ({ apiDates, month, menu })
+    return ({ apiDates, month, days })
 }
 
-function resetMenu(apiDate) {
+function resetMenu() {
     document.getElementById('menu').innerHTML = (`
             <p id="error"></p>
             <p id="Tagesmenü"></p>
@@ -58,22 +55,27 @@ function resetMenu(apiDate) {
 }
 
 async function setMenu(arrayPosition) {
-    const request = await requestMenu()
-    const apiDate = request.apiDates[arrayPosition]
-    const month = request.month
-    const currentDate = (new Date())
 
+    const dates = requestDates()
+    const apiDate = dates.apiDates[arrayPosition]
+    const month = dates.month
+    const day = dates.days[arrayPosition]
+    const currentDate = (new Date())
+    const request = (await api(apiDate))
     resetMenu();
 
+    let alertData = {};
 
-    document.getElementById('date').innerHTML = ('<strong>' + (currentDate.getDate() + arrayPosition) + '.' + month + '.' + currentDate.getFullYear() + '</strong>')
-    if (storage[apiDate].hasOwnProperty('error')) {
-        document.getElementById('error').innerHTML = (`<strong>Error:</strong> ` + request[apiDate].error)
+    document.getElementById('date').innerHTML = ('<strong>' + day + '.' + month + '.' + currentDate.getFullYear() + '</strong>')
+    if (request.hasOwnProperty('error')) {
+        document.getElementById('error').innerHTML = (`<strong>Error:</strong> ` + request.error)
     } else {
-        for (const menu in storage[apiDate].menu) {
-            document.getElementById(menu).innerHTML = (`<strong>${menu}:</strong> ` + request[apiDate].menu[menu])
+        for (const menu in request.menu) {
+            alertData += (`${menu}:\n${request.menu[menu]}`)
+            document.getElementById(menu).innerHTML = (`<strong>${menu}:</strong> ` + request.menu[menu])
         }
     }
+    return ({ alertData, apiDate })
 }
 
 
@@ -89,9 +91,44 @@ function navbarSetActive(navbarElementNumber) {
     document.getElementById(navbarElements[navbarElementNumber]).className = "is-active";
 };
 
-document.addEventListener('DOMContentLoaded', function() {
+function isoToObj(s) {
+    var b = s.split(/[-TZ:]/i);
+
+    return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5]));
+
+}
+
+function timeToGo(s) {
+
+
+    // Convert string to date object
+    var d = isoToObj(s);
+    var diff = d - new Date();
+
+    // Allow for previous times
+    var sign = diff < 0 ? '-' : '';
+    diff = Math.abs(diff);
+
+    // Get time components
+    var hours = diff / 3.6e6 | 0;
+    var mins = diff % 3.6e6 / 6e4 | 0;
+    var secs = Math.round(diff % 6e4 / 1e3);
+
+    // Return formatted string
+    return (secs + (hours * 3600) + (mins * 60));
+}
+
+document.addEventListener('DOMContentLoaded', async function() {
     navbarSetActive(0)
-    setMenu(0);
+    const alertDetails = (await setMenu(0));
+    //const dateTo = (`${alertDetails.apiDate}T01:50:00Z`)
+    //const timeTo = (await timeToGo(dateTo))
+    //console.log(timeTo)
+    //setTimeout(() => {
+    //    alert(alertDetails.alertData)
+    //}, (timeTo * 1000));
+
+
 });
 
 document.getElementById('heute').onclick = function(event) {
