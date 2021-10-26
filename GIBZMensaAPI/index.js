@@ -6,10 +6,9 @@ const rateLimit = require('express-rate-limit')
 const app = require('./js/app');
 
 const limiter = rateLimit({
-        windowMs: 1 * 60 * 1000,
-        max: 10,
-    })
-    //TODO Cleanup Ratelimiter/ adjust rate limit
+    windowMs: 1 * 60 * 1000,
+    max: 15,
+})
 
 dotenv.config();
 
