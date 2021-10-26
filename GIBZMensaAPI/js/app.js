@@ -11,7 +11,7 @@ const archive = require('../models/archive.js');
 
 const limiter = rateLimit({
     windowMs: 1 * 60 * 1000,
-    max: 10,
+    max: 15,
 })
 
 
@@ -43,13 +43,15 @@ app.use(cors({
     origin: '*'
 }));
 
-app.get('/api/v1/', limiter, async(req, res) => {
+app.get('/api/v1/', limiter, async(req, res) => { //TODO assignee:@lela810 Add more comprehensive HTTP Codes
     const date = req.query.date;
     let dateNorm;
+
     if (moment(date).isValid()) {
         dateNorm = moment(date).format('YYYY-MM-DD')
     } else {
-        res.status(400).send({ error: "The date requested is not valid" })
+        res.status(418).send({ error: "The date requested is not valid" })
+
     }
 
     const url = 'https://zfv.ch/de/microsites/restaurant-treff/menuplan#' + dateNorm; //Date must be in format -> 2021-10-22 
