@@ -43,7 +43,7 @@ app.use(cors({
     origin: '*'
 }));
 
-app.get('/api/v1/', limiter, async(req, res) => { //TODO assignee:@lela810 Add more comprehensive HTTP Codes
+app.get('/api/v1/', limiter, async(req, res) => {
     const date = req.query.date;
     let dateNorm;
 
