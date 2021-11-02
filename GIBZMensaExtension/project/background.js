@@ -1,7 +1,10 @@
 async function requestMenu() {
     const currentDate = (new Date());
 
-    const today = currentDate.getDate();
+    let today = currentDate.getDate();
+    if (today < 10) {
+        today = '0' + today
+    }
 
     let tomorrow = (new Date())
     tomorrow.setDate(currentDate.getDate() + 1)
