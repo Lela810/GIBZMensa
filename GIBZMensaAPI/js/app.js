@@ -65,7 +65,7 @@ app.get('/api/v1/', limiter, async(req, res) => {
     if (!["6", "0"].includes(dayOfTheWeek) && (moment(dateNorm).week() - (moment().week())) < 2) {
         try {
             const cachedMenu = await loadFromArchive(dateNorm)
-            if (cachedMenu.hasOwnProperty('menu')) {
+            if ('menu' in cachedMenu) {
                 res.status(200).send(cachedMenu);
             } else {
                 res.status(500).send({ error: "There is no data about that menu" });
