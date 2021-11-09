@@ -58,7 +58,7 @@ app.get('/api/v1/', limiter, async(req, res) => {
     }
 
     const url = 'https://zfv.ch/de/microsites/restaurant-treff/menuplan#' + dateNorm; //Date must be in format -> 2021-10-22 
-    console.log('Date "' + dateNorm + '" requested')
+    console.log('Date "' + date + '" requested')
 
     // Decide if menu is already in the archive
     const dayOfTheWeek = moment(dateNorm).format('d')
