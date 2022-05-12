@@ -6,8 +6,8 @@ services:
     ports:
       - '8080:8080'
     restart: unless-stopped
-    env_file:
-      - stack.env
+    environment:
+      - MONGODB=${MONGODB}
     healthcheck:
       test: ['CMD', 'node', '/app/services/healthcheck.js']
       interval: 1m
