@@ -13,7 +13,12 @@ const limiter = rateLimit({
 dotenv.config();
 
 
-mongoose.connect(`mongodb://${process.env.MONGODB}/GIBZMensaAPI`, { useNewUrlParser: true })
+if (!process.env.MONGODB_USERNAME || !process.env.MONGODB_PASSWORD) {
+    mongoose.connect(`mongodb://${process.env.MONGODB}/GIBZMensaAPI`, { useNewUrlParser: true })
+} else {
+    mongoose.connect(`mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB}/GIBZMensaAPI`, { useNewUrlParser: true })
+}
+
 const db = mongoose.connection
 db.on('error', (error) => console.error(error))
 db.once('open', () => console.log('Connected to Database'))
