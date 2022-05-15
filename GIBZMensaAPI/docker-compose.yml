@@ -13,4 +13,6 @@ services:
       interval: 1m
       timeout: 10s
       retries: 0
+    labels:
+      - com.centurylinklabs.watchtower.enable=false
 
