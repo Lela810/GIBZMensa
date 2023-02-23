@@ -2,7 +2,7 @@ version: '3.3'
 services:
   web:
     container_name: GIBZMensaAPI
-    build: .
+    image: ghcr.io/lela810/gibzmensa:main
     ports:
       - '8080:8080'
     restart: unless-stopped
